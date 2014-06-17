@@ -15,19 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
  
-from electrum_myr.util import print_error
-from urlparse import urlparse, parse_qs
-from PyQt4.QtGui import QPushButton, QMessageBox, QDialog, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QComboBox, QLineEdit, QSpinBox, QProgressDialog
+from PyQt4.QtGui import QPushButton, QMessageBox, QDialog, QVBoxLayout, QGridLayout, QLabel, QLineEdit
 from PyQt4.QtCore import Qt, QRectF, QByteArray
  
 from electrum_myr.plugins import BasePlugin
 from electrum_myr.i18n import _
 from electrum_myr_gui.qt.util import *
- 
-import urllib
+
 import urllib2
-import os, glob
- 
+
 class Plugin(BasePlugin):
  
     def fullname(self): return 'Redeem Prypto'
@@ -92,23 +88,20 @@ class Plugin(BasePlugin):
 		
 
     def do_credit(self):
-		if self.gui.main_window.question("Are you sure you want to redeem this code ?"):
-			coin = "MYR"
-			token = "88dba8ea5697f6bfe1881fa84062b81874618517"
-			act = self.get_account("")
-			myradd = act.get_addresses(False)
-			addr = str(myradd[0])
-			url = "https://prypto.com/merchants/api/?T=RX&TKN={}&COIN={}&PC={}&SC={}&RX={}".format(token, coin, str(self.pryp.text()), str(self.sec.text()), addr)
-			data = urllib2.urlopen(url)
-			response = data.read()
-			if response != None and len(response) == 64:
-				response = str(response)
-			else:
-				response = "Failed!"
-						
-						
-
-			QMessageBox.information(None,"Response:", _("TX= %s" % (str(response))))
+        if self.gui.main_window.question("Are you sure you want to redeem this code ?"):
+            coin = "MYR"
+            token = "88dba8ea5697f6bfe1881fa84062b81874618517"
+            act = self.get_account("")
+            myradd = act.get_addresses(False)
+            addr = str(myradd[0])
+            url = "https://prypto.com/merchants/api/?T=RX&TKN={}&COIN={}&PC={}&SC={}&RX={}".format(token, coin, str(self.pryp.text()), str(self.sec.text()), addr)
+            data = urllib2.urlopen(url)
+            response = data.read()
+            if response != None and len(response) == 64:
+                response = str(response)
+            else:
+                response = "Failed!"
+            QMessageBox.information(None,"Response:", _("TX= %s" % (str(response))))
 			
     def get_account(self, name):
         if self.gui.main_window.wallet.seed_version == 4:
